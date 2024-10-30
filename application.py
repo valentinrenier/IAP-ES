@@ -217,4 +217,4 @@ def modify_task(task_id):
         return jsonify({'message': 'Task updated successfully'}), 200  # Rediriger vers la page principale
 
 if __name__ == '__main__' :
-    application.run(host='127.0.0.1', port='5000', debug=True)
+    application.run(host='0.0.0.0', port='80', debug=False)
