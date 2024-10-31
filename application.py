@@ -11,8 +11,8 @@ COGNITO_LINK = "https://todolistiap.auth.us-east-1.amazoncognito.com"
 CLIENT_ID = "7sf2h4tqn4cgpoiuhcj1fa740h"
 RESPONSE_TYPE = "code"
 SCOPE = "email+openid+profile"
-CALLBACK_URI = "http://ec2-54-236-55-90.compute-1.amazonaws.com/callback"
-REDIRECT_URI = "http://ec2-54-236-55-90.compute-1.amazonaws.com/"
+CALLBACK_URI = "https://iap-lb-1130509503.us-east-1.elb.amazonaws.com/callback"
+REDIRECT_URI = "https://iap-lb-1130509503.us-east-1.elb.amazonaws.com/"
 
 DATABASE_USER = 'admin'
 DATABASE_PW = 'fCH9vRhZA54$d&V'
