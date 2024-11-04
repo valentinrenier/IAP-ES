@@ -11,12 +11,14 @@ api=Namespace("ui",path="/ui",description="UI")
 class index(Resource):
     def get(self):
         if check_token():
-            tasks = Task.query.filter(Task.user.ilike(f"%{session['cognito:username']}%")).order_by(Task.created_at.desc()).all()
-            return make_response(
-                render_template('index.html', tasks = tasks, user=True),
-                200,
-                {'Content-Type': 'text/html'}
-            )
+            username = session['cognito:username']
+            with Session(engine) as sess :
+                tasks = sess.query(Task).filter(Task.user == username).order_by(Task.created_at.desc()).all()
+                return make_response(
+                    render_template('index.html', tasks = tasks, user=True),
+                    200,
+                    {'Content-Type': 'text/html'}
+                )
         else :
             return make_response(
                 render_template('index.html', tasks = None, user=None),
