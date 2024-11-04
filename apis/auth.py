@@ -96,7 +96,7 @@ class Callback(Resource):
         session['cognito:username'] = user_info.get("cognito:username", None)
         
 
-        response = make_response(redirect(url_for('index')), 200, {'Content-Type': 'text/html'})
+        response = make_response(redirect(url_for('ui_index')), 200, {'Content-Type': 'text/html'})
         response.set_cookie("auth_token", access_token, max_age=timedelta(hours=1), httponly=True)
         flash("Successfully logged in", 'info')
 
