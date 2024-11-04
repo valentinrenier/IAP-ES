@@ -112,7 +112,7 @@
 
     {% if user %}
         <button class="logout-button" onclick="window.location.href='{{ url_for('logout') }}'">Log Out</button>
-        <button class="add-card-button" onclick="openModal()">Add a task</button>
+        <button class="btn-submit" onclick="openModal()">Add a task</button>
         {% if tasks %}
             <div class="ag-format-container">
                 {% for task in tasks %}
@@ -186,7 +186,7 @@
                 </select>
                 <br><br>
 
-                <button type="submit">Add</button>
+                <button type="submit" class="btn-submit">Add</button>
             </form>
         </div>
     </div>
@@ -223,7 +223,7 @@
                 </select>
                 <br><br>
     
-                <button type="submit">Update Task</button>
+                <button type="submit" class="btn-submit">Update Task</button>
             </form>
         </div>
     </div>

@@ -5,24 +5,8 @@ import requests
 import jwt
 import pymysql
 import time
-
-
-COGNITO_LINK = "https://todolistiap.auth.us-east-1.amazoncognito.com"
-CLIENT_ID = "7sf2h4tqn4cgpoiuhcj1fa740h"
-RESPONSE_TYPE = "code"
-SCOPE = "email+openid+profile"
-CALLBACK_URI = "https://iap-lb-1130509503.us-east-1.elb.amazonaws.com/callback"
-REDIRECT_URI = "https://iap-lb-1130509503.us-east-1.elb.amazonaws.com/"
-
-DATABASE_USER = 'admin'
-DATABASE_PW = 'fCH9vRhZA54$d&V'
-DATABASE_IP = 'database-2.crymgyucgybh.us-east-1.rds.amazonaws.com'
-DATABASE_PORT = 3306
-DATABASE_DIALECT = 'mysql'
-DATABASE_DRIVER = ''
-DATABASE_NAME = 'todolist'
-
-JWKS_URL = 'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_8XJmsn1aX/.well-known/jwks.json'
+from cognito_secret import COGNITO_LINK, CLIENT_ID, RESPONSE_TYPE, SCOPE, CALLBACK_URI, REDIRECT_URI, JWKS_URL
+from db_secret import DATABASE_USER, DATABASE_PW, DATABASE_IP, DATABASE_PORT, DATABASE_NAME, DATABASE_DIALECT, DATABASE_DRIVER
 
 application = Flask(__name__)
 application.secret_key = 'q[3rycB)I0tA,8bJRF78t.B4*($2+5Gc'
@@ -211,6 +195,7 @@ def modify_task(task_id):
         task.deadline = data.get('deadline', task.deadline)
         task.priority = data.get('priority', task.priority)
         task.completed = data.get('completed', task.completed)
+        
 
         db.session.commit()  # Valider les changements dans la base de données
         flash("Task successfully modified", 'info')

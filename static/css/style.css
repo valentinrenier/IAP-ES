@@ -309,6 +309,36 @@ textarea {
   border: none;               /* Assurez-vous qu'il n'y a pas de bordure */
 }
 
+.btn-submit {
+  background-color: #007BFF;      /* Couleur de fond bleue */
+  color: #fff;                    /* Texte blanc */
+  border: none;                   /* Pas de bordure */
+  border-radius: 5px;             /* Bordures arrondies */
+  padding: 10px 20px;             /* Taille du bouton */
+  font-size: 16px;                /* Taille du texte */
+  cursor: pointer;                /* Curseur de la main */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Animation */
+}
+
+/* Effet hover */
+.btn-submit:hover {
+  background-color: #0056b3;      /* Couleur plus foncée au survol */
+  transform: scale(1.05);         /* Légère augmentation de la taille */
+}
+
+/* Effet clic */
+.btn-submit:active {
+  background-color: #003d80;      /* Couleur plus foncée lorsqu'on clique */
+  transform: scale(0.95);         /* Légère réduction de la taille pour effet visuel */
+}
+
+/* Bouton désactivé */
+.btn-submit:disabled {
+  background-color: #cccccc;      /* Grisé */
+  cursor: not-allowed;            /* Curseur interdit */
+  opacity: 0.7;                   /* Opacité réduite */
+}
+
 
 @media only screen and (max-width: 979px) {
   .ag-courses_item {
