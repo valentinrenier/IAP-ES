@@ -5,7 +5,7 @@ from apis.auth import check_token
 from data.db_session import Session
 from data.db_engine import engine
 
-api=Namespace("ui",path="/",description="UI")
+api=Namespace("ui",path="/ui",description="UI")
 
 @api.route('/')
 class index():
