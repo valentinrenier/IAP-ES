@@ -111,7 +111,7 @@
 
 
     {% if user %}
-        <button class="logout-button" onclick="window.location.href='{{ url_for('logout') }}'">Log Out</button>
+        <button class="logout-button" onclick="window.location.href='{{ url_for('auth.logout') }}'">Log Out</button>
         <button class="btn-submit" onclick="openModal()">Add a task</button>
         {% if tasks %}
             <div class="ag-format-container">
@@ -120,7 +120,7 @@
                         <div class="ag-courses_item">
                             <div class="ag-courses-item_bg"></div>
                             <div class="ag-courses-item_title">{{ task.title }}</div>
-                            <div class="ag-courses-item_description">Description : {{ task.description }}</div>
+                            <div class="ag-courses-item_description">{{ task.description }}</div>
 
                             {% if task.priority == 'Low' %}
                                 <div class="ag-courses-item_priority_low">Priority : {{ task.priority }}</div>
@@ -157,7 +157,7 @@
         {% endif %}
     {% else %}
         <p>Please log in to access all the functionalities.</p>
-        <button class="login-button" onclick="window.location.href='{{ url_for('login') }}'">Log In</button>
+        <button class="login-button" onclick="window.location.href='{{ url_for('auth.login') }}'">Log In</button>
     {% endif %}
 
 
