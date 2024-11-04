@@ -50,7 +50,7 @@
             const completed = (document.getElementById("editCompleted").value === 'True');
 
             // Envoyer les données à votre backend pour mettre à jour la tâche
-            fetch(`/modify_task/${id}`, {
+            fetch(`/api/modify_task/${id}`, {
                 method: 'POST', // ou POST selon votre API
                 headers: {
                     'Content-Type': 'application/json'
@@ -111,7 +111,7 @@
 
 
     {% if user %}
-        <button class="logout-button" onclick="window.location.href='{{ url_for('auth.logout') }}'">Log Out</button>
+        <button class="logout-button" onclick="window.location.href='{{ url_for('auth_logout') }}'">Log Out</button>
         <button class="btn-submit" onclick="openModal()">Add a task</button>
         {% if tasks %}
             <div class="ag-format-container">
@@ -145,7 +145,7 @@
                                 </div>
                             {% endif %}
                             <button class="modify-button" onclick="openEditModal('{{ task.id }}', '{{ task.title }}', '{{ task.description }}','{{ task.priority }}','{{ task.deadline }}','{{ task.completed|e }}' )">Edit</button>
-                            <form action="{{ url_for('delete_task', task_id=task.id) }}" method="POST" style="display:inline;">
+                            <form action="{{ url_for('api_delete_task', task_id=task.id) }}" method="POST" style="display:inline;">
                                 <button type="submit" class="delete-button">Delete</button>
                             </form>
                         </div>
@@ -157,7 +157,7 @@
         {% endif %}
     {% else %}
         <p>Please log in to access all the functionalities.</p>
-        <button class="login-button" onclick="window.location.href='{{ url_for('auth.login') }}'">Log In</button>
+        <button class="login-button" onclick="window.location.href='{{ url_for('auth_login') }}'">Log In</button>
     {% endif %}
 
 
@@ -165,7 +165,7 @@
         <div class="modal-content">
             <span onclick="closeModal()" class="close-button">&times;</span>
             <h2>Add a task</h2>
-            <form action="{{ url_for('index') }}" method="post">
+            <form action="{{ url_for('ui_index') }}" method="post">
                 <label for="title">Title :</label>
                 <input type="text" id="title" name="title" required>
                 <br><br>
