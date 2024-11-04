@@ -103,7 +103,7 @@ class Callback(Resource):
         return response
 
 @api.route('/logout')
-class Logout():
+class Logout(Resource):
     def get(self):
         session.pop('access_token', None)
         session.pop('preferred_username', None)
