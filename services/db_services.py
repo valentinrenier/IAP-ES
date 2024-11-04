@@ -12,7 +12,7 @@ from flask import flash
 
 def delete_task(task_id):
     with Session(engine) as session :
-        task = Task.query.get(task_id)
+        task = session.query(Task).filter(Task.id == task_id).one()
         if task is None:
             return flash("No task to delete", 'error')
         session.delete(task)
@@ -22,7 +22,7 @@ def delete_task(task_id):
     
 def modify_task(task_id, data):
     with Session(engine) as session :
-        task = Task.query.get(task_id)
+        task = session.query(Task).filter(Task.id == task_id).one()
         if task is None:
             return False
         if task :
