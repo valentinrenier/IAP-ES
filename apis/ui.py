@@ -16,7 +16,9 @@ class index(Resource):
 
             with Session(engine) as session :
                 priority_order = case(
-                    [(Task.priority == 'Low', 1), (Task.priority == 'Medium', 2), (Task.priority == 'High', 3)],
+                    (Task.priority == 'Low', 1),
+                    (Task.priority == 'Medium', 2),
+                    (Task.priority == 'High', 3),
                     else_=4  # Valeur par défaut si la priorité n'est pas définie
                 )
                 order_by = request.args.get('order_by', 'created_at_desc')  # Valeur par défaut
