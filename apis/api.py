@@ -2,7 +2,7 @@ from flask import render_template, request, make_response, flash
 from flask import session as flask_session
 from flask_restx import Namespace,Resource,fields
 from data.models import Task
-from data.db_session import Session
+from sqlalchemy.orm import Session
 from data.db_engine import engine
 from services.db_services import delete_task, modify_task, add_task
 
@@ -16,7 +16,7 @@ class Add(Resource):
         description = data.get('description')
         deadline = data.get('deadline')
         priority = data.get('priority')
-        
+
         if add_task(title, description, priority, deadline) == True :
             flash("Task successfully added", 'info')
             with Session(engine) as session :
