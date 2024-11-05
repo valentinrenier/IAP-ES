@@ -1,4 +1,4 @@
-from flask import render_template, request, make_response, flash
+from flask import render_template, request, make_response, flash, redirect, url_for
 from flask import session as flask_session
 from flask_restx import Namespace,Resource,fields
 from data.models.Task import Task
@@ -21,11 +21,7 @@ class Add(Resource):
             flash("Task successfully added", 'info')
             with Session(engine) as session :
                 tasks = session.query(Task).filter(Task.user == flask_session['cognito:username']).order_by(Task.created_at.desc()).all()
-                return make_response(
-                    render_template('index.html', tasks = tasks, user=True),
-                    200,
-                    {'Content-Type': 'text/html'}
-                )
+                return make_response(redirect(url_for('ui_index')), 302, {'Content-Type': 'text/html'})
         else :
             flash("No task to delete", 'error')
             return {'error': 'Task not deleted'}, 404
