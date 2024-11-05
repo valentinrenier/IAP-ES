@@ -31,17 +31,16 @@
             document.getElementById('editPriority').value = priority;
             document.getElementById('editDeadline').value = deadline;
             document.getElementById('editCompleted').value = completed;
-            document.getElementById('editTaskModal').style.display = 'flex'; // Ouvrir la modale
+            document.getElementById('editTaskModal').style.display = 'flex'; 
         }
 
         function closeEditModal() {
-            document.getElementById('editTaskModal').style.display = 'none'; // Fermer la modale
+            document.getElementById('editTaskModal').style.display = 'none'; 
         }
 
         function editTask(event) {
-            event.preventDefault(); // Empêche le rechargement de la page
-
-            // Récupérer les valeurs du formulaire
+            event.preventDefault(); 
+            
             const id = document.getElementById("taskId").value;
             const title = document.getElementById("editTitle").value;
             const description = document.getElementById("editDescription").value;
@@ -49,9 +48,8 @@
             const deadline = document.getElementById("editDeadline").value;
             const completed = (document.getElementById("editCompleted").value === 'True');
 
-            // Envoyer les données à votre backend pour mettre à jour la tâche
             fetch(`/api/modify/${id}`, {
-                method: 'POST', // ou POST selon votre API
+                method: 'POST', 
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -70,7 +68,7 @@
                 throw new Error("Error ");
             })
             .then(data => {
-                location.reload(); // Recharger la page ou mettre à jour l'élément dans la liste
+                location.reload();
             })
             .catch(error => {
                 console.error('Erreur:', error);
@@ -78,17 +76,15 @@
         }
 
         function addTask(event) {
-            event.preventDefault(); // Empêche le rechargement de la page
+            event.preventDefault();
 
-            // Récupérer les valeurs du formulaire
             const title = document.getElementById('title').value;
             const description = document.getElementById('description').value;
             const priority = document.getElementById('priority').value;
             const deadline = document.getElementById('deadline').value;
 
-            // Envoyer les données à votre backend pour ajouter la tâche
             fetch('/api/add', {
-                method: 'POST', // Utiliser POST pour créer une nouvelle tâche
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -101,17 +97,17 @@
             })
             .then(response => {
                 if (response.ok) {
-                    return response.json(); // Convertir la réponse en JSON si tout va bien
+                    return response.json();
                 }
                 throw new Error("Erreur lors de l'ajout de la tâche.");
             })
             .then(data => {
-                console.log('Tâche ajoutée avec succès:', data); // Traiter la réponse ici, par exemple, afficher un message de succès
-                closeModal(); // Fermer le modal après la soumission
-                location.reload(); // Recharger la page pour voir la nouvelle tâche ajoutée (ou mettre à jour la liste)
+                console.log('Tâche ajoutée avec succès:', data);
+                closeModal();
+                location.reload(); 
             })
             .catch(error => {
-                console.error('Erreur:', error); // Gérer les erreurs ici
+                console.error('Erreur:', error); 
             });
         }
 
@@ -119,25 +115,28 @@
             var flashMessage = document.getElementById('flashMessage');
 	    
             if (flashMessage.innerHTML.trim() !== "") {
-                flashMessage.style.display = 'block'; // Affiche le message flash
+                flashMessage.style.display = 'block';
                 setTimeout(function() {
-                    flashMessage.style.opacity = '0'; // Rendre le message transparent
+                    flashMessage.style.opacity = '0'; 
                     setTimeout(function() {
-                        flashMessage.style.display = 'none'; // Masquer le message après la transition
-                    }, 500); // Correspond à la durée de la transition
-                }, 5000); // Attendre 5 secondes avant de commencer à disparaître
+                        flashMessage.style.display = 'none'; 
+                    }, 500);
+                }, 5000);
             }
         }
 
         function onOrderByChange(selectedOrder) {
             if (selectedOrder) {
-                console.log("Option sélectionnée :", selectedOrder); // Vérification du déclenchement
                 window.location.href = `?order_by=${selectedOrder}`;
             }
         }
 
     </script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body { visibility: hidden; }
+    </style>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" onload="document.body.style.visibility='visible'">
 </head>
 <body>
 
