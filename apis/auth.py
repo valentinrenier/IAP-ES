@@ -21,8 +21,8 @@ def is_token_expired(token):
     except jwt.ExpiredSignatureError:
         return True  
     except Exception as e:
-        return True  # Considérer comme expiré en cas d'erreur
-    return False  # Token valide
+        return True
+    return False
 
 def check_token():
     token = request.cookies.get('auth_token')
@@ -40,7 +40,6 @@ def check_token():
     public_key = get_public_key(key)
 
     try:
-        # Décoder et valider le token avec la clé
         jwt.decode(token, public_key, algorithms=['RS256'])
         return not is_token_expired(token)
     except jwt.ExpiredSignatureError:
@@ -82,6 +81,8 @@ class Callback(Resource):
         id_token = tokens['id_token']
         if id_token is None:
             return {'error': 'ID token not found in response'}, 400
+        
+        #TODO Secure this
         user_info = jwt.decode(id_token, options={"verify_signature": False})
 
         session['preferred_username'] = user_info.get("preferred_username", None)
