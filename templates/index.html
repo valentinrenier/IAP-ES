@@ -158,19 +158,19 @@
         <button class="btn-submit" onclick="openModal()">Add a task</button>
         {% if tasks %}
             <div class="ag-format-container">
-                <div>
-                    <label for="order_by">Sort by:</label>
-                    <select id="order_by" name="order_by" onchange="onOrderByChange(this.value)" class="dropdown">
-                        <option value="created_at_asc" {% if request.args.get('order_by') == 'created_at_asc' %}selected{% endif %}>Date Created (Oldest First)</option>
-                        <option value="created_at_desc" {% if request.args.get('order_by') == 'created_at_desc' %}selected{% endif %}>Date Created (Newest First)</option>
-                        <option value="priority_asc" {% if request.args.get('order_by') == 'priority_asc' %}selected{% endif %}>Priority (Low to High)</option>
-                        <option value="priority_desc" {% if request.args.get('order_by') == 'priority_desc' %}selected{% endif %}>Priority (High to Low)</option>
-                        <option value="deadline_asc" {% if request.args.get('order_by') == 'deadline_asc' %}selected{% endif %}>Deadline (Earliest First)</option>
-                        <option value="deadline_desc" {% if request.args.get('order_by') == 'deadline_desc' %}selected{% endif %}>Deadline (Latest First)</option>
-                    </select>
-                </div>
                 {% for task in tasks %}
                     <div class="ag-courses_box">
+                        <div>
+                            <label for="order_by">Sort by:</label>
+                            <select id="order_by" name="order_by" onchange="onOrderByChange(this.value)" class="dropdown">
+                                <option value="created_at_asc" {% if request.args.get('order_by') == 'created_at_asc' %}selected{% endif %}>Date Created (Oldest First)</option>
+                                <option value="created_at_desc" {% if request.args.get('order_by') == 'created_at_desc' %}selected{% endif %}>Date Created (Newest First)</option>
+                                <option value="priority_asc" {% if request.args.get('order_by') == 'priority_asc' %}selected{% endif %}>Priority (Low to High)</option>
+                                <option value="priority_desc" {% if request.args.get('order_by') == 'priority_desc' %}selected{% endif %}>Priority (High to Low)</option>
+                                <option value="deadline_asc" {% if request.args.get('order_by') == 'deadline_asc' %}selected{% endif %}>Deadline (Earliest First)</option>
+                                <option value="deadline_desc" {% if request.args.get('order_by') == 'deadline_desc' %}selected{% endif %}>Deadline (Latest First)</option>
+                            </select>
+                        </div>
                         <div class="ag-courses_item">
                             <div class="ag-courses-item_bg"></div>
                             <div class="ag-courses-item_title">{{ task.title }}</div>
