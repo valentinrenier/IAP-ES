@@ -77,6 +77,44 @@
             });
         }
 
+        function addTask(event) {
+            event.preventDefault(); // Empêche le rechargement de la page
+
+            // Récupérer les valeurs du formulaire
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            const priority = document.getElementById('priority').value;
+            const deadline = document.getElementById('deadline').value;
+
+            // Envoyer les données à votre backend pour ajouter la tâche
+            fetch('/api/add', {
+                method: 'POST', // Utiliser POST pour créer une nouvelle tâche
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    title,
+                    description,
+                    priority,
+                    deadline
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json(); // Convertir la réponse en JSON si tout va bien
+                }
+                throw new Error("Erreur lors de l'ajout de la tâche.");
+            })
+            .then(data => {
+                console.log('Tâche ajoutée avec succès:', data); // Traiter la réponse ici, par exemple, afficher un message de succès
+                closeModal(); // Fermer le modal après la soumission
+                location.reload(); // Recharger la page pour voir la nouvelle tâche ajoutée (ou mettre à jour la liste)
+            })
+            .catch(error => {
+                console.error('Erreur:', error); // Gérer les erreurs ici
+            });
+        }
+
         window.onload = function() {
             var flashMessage = document.getElementById('flashMessage');
 	    
@@ -165,7 +203,7 @@
         <div class="modal-content">
             <span onclick="closeModal()" class="close-button">&times;</span>
             <h2>Add a task</h2>
-            <form action="{{ url_for('api_add')}}" method="post">
+            <form id="addTaskForm" onsubmit="addTask(event)" method="POST">
                 <label for="title">Title :</label>
                 <input type="text" id="title" name="title" required>
                 <br><br>
@@ -186,7 +224,7 @@
                 </select>
                 <br><br>
 
-                <button type="submit" class="btn-submit">Add</button>
+                <button type="submit" class="btn-submit">Add Task</button>
             </form>
         </div>
     </div>
