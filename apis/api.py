@@ -19,9 +19,7 @@ class Add(Resource):
 
         if add_task(title, description, priority, deadline) == True :
             flash("Task successfully added", 'info')
-            with Session(engine) as session :
-                tasks = session.query(Task).filter(Task.user == flask_session['cognito:username']).order_by(Task.created_at.desc()).all()
-                return make_response(redirect(url_for('ui_index')), 302, {'Content-Type': 'text/html'})
+            return {'message': 'Task added'}, 200
         else :
             flash("No task to delete", 'error')
             return {'error': 'Task not deleted'}, 404
