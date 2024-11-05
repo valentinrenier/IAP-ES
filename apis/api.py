@@ -29,10 +29,23 @@ class Delete(Resource):
     def post(self, task_id):
         if delete_task(task_id) == True :
             flash("Task successfully deleted", 'info')
-            return {'message': 'Task updated successfully'}, 200
+            with Session(engine) as session :
+                tasks = session.query(Task).filter(Task.user == flask_session['cognito:username']).order_by(Task.created_at.desc()).all()
+                return make_response(
+                    render_template('index.html', tasks = tasks, user=True),
+                    200,
+                    {'Content-Type': 'text/html'}
+                )
         else :
-            flash("No task to delete", 'error')
-            return {'error': 'Task not deleted'}, 404
+            flash("Task not deleted", 'error')
+            with Session(engine) as session :
+                tasks = session.query(Task).filter(Task.user == flask_session['cognito:username']).order_by(Task.created_at.desc()).all()
+                return make_response(
+                    render_template('index.html', tasks = tasks, user=True),
+                    400,
+                    {'Content-Type': 'text/html'}
+                )
+            return {'error': 'Task not deleted'}, 400
 
 
 @api.route('/modify/<int:task_id>', methods=['POST'])
