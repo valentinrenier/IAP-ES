@@ -11,7 +11,7 @@ api=Namespace("api",path="/api",description="Api operations")
 @api.route('/add')
 class Add(Resource):
     def post(self):
-        data = request.get_json()  # Ou request.form si vous utilisez form-urlencoded
+        data = request.get_json()
         title = data.get('title')
         description = data.get('description')
         deadline = data.get('deadline')
@@ -54,7 +54,7 @@ class Modify(Resource):
         data = request.json
         if modify_task(task_id, data) == True :
             flash("Task successfully modified", 'info')
-            return {'message': 'Task updated successfully'}, 200  # Rediriger vers la page principale
+            return {'message': 'Task updated successfully'}, 200
         else : 
             flash("Task not modified", 'error')
             return {'error': 'Task not modified'}, 404
