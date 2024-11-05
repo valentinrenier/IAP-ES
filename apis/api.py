@@ -1,7 +1,7 @@
 from flask import render_template, request, make_response, flash
 from flask import session as flask_session
 from flask_restx import Namespace,Resource,fields
-from data.models import Task
+from data.models.Task import Task
 from sqlalchemy.orm import Session
 from data.db_engine import engine
 from services.db_services import delete_task, modify_task, add_task
