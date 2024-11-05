@@ -6,7 +6,7 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 with Session() as session:
-    username = 'gross'  # Assurez-vous que cette valeur est bien définie
+    username = 'gross_value'  # Assurez-vous que cette valeur est bien définie
     tasks = (
         session.query(Task)
         .filter(Task.user == username)
