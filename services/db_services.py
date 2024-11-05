@@ -2,6 +2,7 @@ from decimal import Decimal
 from data.models.Task import Task
 from sqlalchemy.orm import Session
 from data.db_engine import engine
+from flask import session as flask_session
     
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
@@ -10,15 +11,33 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from flask import flash
 
+def add_task(title, description, priority, deadline):
+    with Session(engine) as session :
+        try :
+            new_task = Task(
+                user = flask_session['cognito:username'],
+                title = title,
+                description = description,
+                priority= priority,
+                deadline = deadline,
+                created_at = datetime.now()
+            )
+            session.add(new_task)
+            session.commit()
+            return True
+        except :
+            return False 
+
+
 def delete_task(task_id):
     with Session(engine) as session :
         task = session.query(Task).filter(Task.id == task_id).one()
         if task is None:
-            return flash("No task to delete", 'error')
+            return False
         session.delete(task)
         session.commit()
 
-        return flash("Task successfully deleted", 'info')
+        return True
     
 def modify_task(task_id, data):
     with Session(engine) as session :
@@ -35,4 +54,4 @@ def modify_task(task_id, data):
 
             session.commit()  # Valider les changements dans la base de données
             flash("Task successfully modified", 'info')
-            return flash("Task successfully modified", 'info')  # Rediriger vers la page principale
+            return True  # Rediriger vers la page principale

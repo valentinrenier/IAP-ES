@@ -84,14 +84,6 @@ class Callback(Resource):
             return {'error': 'ID token not found in response'}, 400
         user_info = jwt.decode(id_token, options={"verify_signature": False})
 
-
-
-
-
-
-
-
-        #TODO : Changer ça 
         session['preferred_username'] = user_info.get("preferred_username", None)
         session['cognito:username'] = user_info.get("cognito:username", None)
         

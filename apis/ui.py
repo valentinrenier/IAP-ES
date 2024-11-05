@@ -1,5 +1,5 @@
 from flask import render_template, make_response
-from flask import session as sess
+from flask import session as flask_session
 from flask_restx import Namespace, Resource
 from data.models.Task import Task
 from apis.auth import check_token
@@ -12,9 +12,8 @@ api=Namespace("ui",path="/ui",description="UI")
 class index(Resource):
     def get(self):
         if check_token():
-            username = sess['cognito:username']
             with Session(engine) as session :
-                tasks = session.query(Task).filter(Task.user == username).order_by(Task.created_at.desc()).all()
+                tasks = session.query(Task).filter(Task.user == flask_session['cognito:username']).order_by(Task.created_at.desc()).all()
                 return make_response(
                     render_template('index.html', tasks = tasks, user=True),
                     200,
