@@ -6,7 +6,7 @@ class Task(Base):
 
     id = Column(Integer, primary_key=True) 
     user = Column(String(100), primary_key=False, nullable=False)
-    title = Column(Text, nullable=False) 
+    title = Column(String(1000), nullable=False) 
     description = Column(Text, nullable=False) 
     deadline = Column(DateTime, nullable=True)  
     priority = Column(Text, nullable=False)

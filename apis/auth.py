@@ -96,7 +96,7 @@ class Callback(Resource):
         session['cognito:username'] = user_info.get("cognito:username", None)
         
 
-        response = make_response(redirect(url_for('ui_index')), 200, {'Content-Type': 'text/html'})
+        response = make_response(redirect(url_for('ui_index')), 302, {'Content-Type': 'text/html'})
         response.set_cookie("auth_token", access_token, max_age=timedelta(hours=1), httponly=True)
         flash("Successfully logged in", 'info')
 
@@ -105,10 +105,9 @@ class Callback(Resource):
 @api.route('/logout')
 class Logout(Resource):
     def get(self):
-        session.pop('access_token', None)
-        session.pop('preferred_username', None)
-        session.pop('username', None)
+        session.clear()
         response = make_response(redirect(f"{COGNITO_LINK}/logout?client_id={CLIENT_ID}&logout_uri={REDIRECT_URI}"))
         response.set_cookie('auth_token', '', expires=0)
+        response.set_cookie('session', '', expires=0)
         flash("Successfully logged out", 'info')
         return response

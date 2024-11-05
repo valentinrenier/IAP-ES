@@ -8,7 +8,7 @@ from services.db_services import delete_task, modify_task
 api=Namespace("api",path="/api",description="Api operations")
 
 @api.route('/delete/<int:task_id>')
-class Delete_task(Resource):
+class Delete(Resource):
     def post(self, task_id):
         if delete_task(task_id) == True :
             flash("Task successfully deleted", 'info')
@@ -18,8 +18,8 @@ class Delete_task(Resource):
             return {'error': 'Task not deleted'}, 404
 
 
-@api.route('/modify_task/<int:task_id>', methods=['POST'])
-class Modify_task(Resource):
+@api.route('/modify/<int:task_id>', methods=['POST'])
+class Modify(Resource):
     def post(self, task_id):
         data = request.json
         if modify_task(task_id, data) == True :
