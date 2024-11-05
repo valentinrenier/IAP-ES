@@ -129,11 +129,11 @@
             }
         }
 
-        document.getElementById('order_by').addEventListener('change', function() {
-            const orderBy = this.value;
-
-            // Redirection vers l'URL avec le paramètre de tri sélectionné
-            window.location.href = `/ui/index?order_by=${orderBy}`;
+        document.getElementById("orderBy").addEventListener("change", function() {
+            const selectedOrder = this.value;
+            if (selectedOrder) {
+                window.location.href = `?order_by=${selectedOrder}`;
+            }
         });
 
     </script>
@@ -154,7 +154,17 @@
         {% endwith %}
     </div>
     
-
+    <form id="orderForm">
+        <label for="order_by">Order By:</label>
+        <select id="order_by" name="order_by">
+            <option value="created_at_asc">Date Created (Oldest First)</option>
+            <option value="created_at_desc">Date Created (Newest First)</option>
+            <option value="priority_asc">Priority (Low to High)</option>
+            <option value="priority_desc">Priority (High to Low)</option>
+            <option value="deadline_asc">Deadline (Earliest First)</option>
+            <option value="deadline_desc">Deadline (Latest First)</option>
+        </select>
+    </form>
 
     {% if user %}
         <button class="logout-button" onclick="window.location.href='{{ url_for('auth_logout') }}'">Log Out</button>
@@ -273,18 +283,6 @@
             </form>
         </div>
     </div>
-
-    <form id="orderForm">
-        <label for="order_by">Order By:</label>
-        <select id="order_by" name="order_by">
-            <option value="created_at_asc">Date Created (Oldest First)</option>
-            <option value="created_at_desc">Date Created (Newest First)</option>
-            <option value="priority_asc">Priority (Low to High)</option>
-            <option value="priority_desc">Priority (High to Low)</option>
-            <option value="deadline_asc">Deadline (Earliest First)</option>
-            <option value="deadline_desc">Deadline (Latest First)</option>
-        </select>
-    </form>
     
 
     
