@@ -25,12 +25,12 @@ def is_token_expired(token):
     return False
 
 def check_token():
-    token = request.cookies.get('auth_token')
+    access_token = request.cookies.get('access_token')
 
-    if not token:
+    if not access_token:
         return False
 
-    kid = jwt.get_unverified_header(token)['kid']
+    kid = jwt.get_unverified_header(access_token)['kid']
     jwks = requests.get(JWKS_URL).json()
     key = next((key for key in jwks['keys'] if key['kid'] == kid), None)
 
@@ -40,13 +40,45 @@ def check_token():
     public_key = get_public_key(key)
 
     try:
-        jwt.decode(token, public_key, algorithms=['RS256'])
-        return not is_token_expired(token)
+        jwt.decode(access_token, public_key, algorithms=['RS256'])
+        if is_token_expired(access_token):
+            refresh_token = request.cookies.get('refresh_token')
+            if not is_token_expired(refresh_token) :
+                if refresh_access_token(): 
+                    return True
+                return False
+
+        else : 
+            return True
     except jwt.ExpiredSignatureError:
         return False
     except jwt.InvalidTokenError:
         return False
     
+def refresh_access_token():
+    refresh_token = request.cookies.get('refresh_token')
+    if not refresh_token:
+        return {'error': 'No refresh token found'}, 400
+    
+    token_url = f"{COGNITO_LINK}/oauth2/token"
+    data = {
+        'grant_type': 'refresh_token',
+        'client_id': CLIENT_ID,
+        'refresh_token': refresh_token,
+    }
+    
+    response = requests.post(token_url, data=data)
+    if response.status_code != 200:
+        return False
+
+    tokens = response.json()
+    access_token = tokens.get('access_token')
+    if not access_token:
+        return {'error': 'No access token found in refresh response'}, 400
+    
+    response.set_cookie("access_token", access_token, max_age=timedelta(hours=1), httponly=True, secure=True)
+
+    return True 
 
 @api.route("/login")
 class Login(Resource):
@@ -78,6 +110,10 @@ class Callback(Resource):
         if access_token is None:
             return {'message': 'Access token not found in response!'}, 400
         
+        refresh_token = tokens.get('refresh_token')
+        if refresh_token is None :
+            return {'message': 'Refresh token not found in response!'}, 400
+
         id_token = tokens['id_token']
         if id_token is None:
             return {'error': 'ID token not found in response'}, 400
@@ -90,7 +126,8 @@ class Callback(Resource):
         
 
         response = make_response(redirect(url_for('ui_index')), 302, {'Content-Type': 'text/html'})
-        response.set_cookie("auth_token", access_token, max_age=timedelta(hours=1), httponly=True)
+        response.set_cookie("access_token", access_token, max_age=timedelta(hours=1), httponly=True, secure=True)
+        response.set_cookie("refresh_token", refresh_token, max_age=timedelta(days=30), httponly=True, secure=True)
         flash("Successfully logged in", 'info')
 
         return response
@@ -100,7 +137,8 @@ class Logout(Resource):
     def get(self):
         session.clear()
         response = make_response(redirect(f"{COGNITO_LINK}/logout?client_id={CLIENT_ID}&logout_uri={REDIRECT_URI}"))
-        response.set_cookie('auth_token', '', expires=0)
+        response.set_cookie('access_token', '', expires=0)
+        response.set_cookie('refresh_token', '', expires=0)
         response.set_cookie('session', '', expires=0)
         flash("Successfully logged out", 'info')
         return response
