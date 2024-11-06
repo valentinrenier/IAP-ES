@@ -324,6 +324,7 @@ textarea {
 .dropdown {
   display: inline-block;
   position: flex;
+  align-items: flex-start;
 }
 
 .filters-container {
