@@ -134,7 +134,7 @@
             }
         }
 
-        function applyFilters(event) {
+        function applyOrder(event) {
             event.preventDefault();
 
             const filters = Array.from(document.querySelectorAll('.filter:checked')).map(filter => filter.value);
@@ -147,6 +147,22 @@
                     filters.push(filter);
                 }
             });
+            
+            const params = new URLSearchParams();
+            filters.forEach(filter => params.append('filters[]', filter));
+            params.append('order_by', orderBy);
+
+            const url = `/ui?${params.toString()}`;
+            window.location.href = url;
+            filterModal.style.display = "none";
+        }
+
+        function applyFilters(event) {
+            event.preventDefault();
+
+            const filters = Array.from(document.querySelectorAll('.filter:checked')).map(filter => filter.value);
+
+            const orderBy = document.getElementById('order_by').value || 'created_at_desc'; 
             
             const params = new URLSearchParams();
             filters.forEach(filter => params.append('filters[]', filter));
@@ -205,7 +221,7 @@
         <div class="ag-format-container">
             <div class="dropdown">
                 <label for="order_by">Sort by:</label>
-                <select id="order_by" name="order_by" onchange="applyFilters(event)">
+                <select id="order_by" name="order_by" onchange="applyOrder(event)">
                     <option value="created_at_asc" {% if request.args.get('order_by') == 'created_at_asc' %}selected{% endif %}>Date Created (Oldest First)</option>
                     <option value="created_at_desc" {% if request.args.get('order_by') == 'created_at_desc' %}selected{% endif %}>Date Created (Newest First)</option>
                     <option value="priority_asc" {% if request.args.get('order_by') == 'priority_asc' %}selected{% endif %}>Priority (Low to High)</option>
