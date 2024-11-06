@@ -141,7 +141,7 @@
 
             const orderBy = document.getElementById('order_by').value || 'created_at_desc'; 
 
-            const savedFilters = loadSavedFilters();
+            const savedFilters = loadFilters();
             savedFilters.forEach(filter => {
                 if (!filters.includes(filter)) {
                     filters.push(filter);
@@ -155,6 +155,11 @@
             const url = `/ui?${params.toString()}`;
             window.location.href = url;
             filterModal.style.display = "none";
+        }
+
+        function loadFilters() {
+            const filters = new URLSearchParams(window.location.search).getAll('filters[]'); // Récupère tous les filtres dans l'URL
+            return filters; // Retourne la liste des filtres sauvegardés dans l'URL
         }
 
         function loadSavedFilters() {
