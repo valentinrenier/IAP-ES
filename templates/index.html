@@ -102,7 +102,6 @@
                 throw new Error("Erreur lors de l'ajout de la tâche.");
             })
             .then(data => {
-                console.log('Tâche ajoutée avec succès:', data);
                 closeModal();
                 location.reload(); 
             })
@@ -130,6 +129,21 @@
                 window.location.href = `?order_by=${selectedOrder}`;
             }
         }
+        function applyFilters(event) {
+            event.preventDefault();
+
+            const filters = Array.from(document.querySelectorAll('.filter:checked')).map(filter => filter.value);
+
+            const orderBy = document.getElementById('orderBy') ? document.getElementById('orderBy').value : 'created_at_desc';
+
+            const params = new URLSearchParams();
+            filters.forEach(filter => params.append('filters[]', filter));
+            params.append('order_by', orderBy);
+
+            const url = `/ui?${params.toString()}`;
+            window.location.href = url;
+        }
+
 
     </script>
     <style>
@@ -167,7 +181,18 @@
                         <option value="priority_desc" {% if request.args.get('order_by') == 'priority_desc' %}selected{% endif %}>Priority (High to Low)</option>
                         <option value="deadline_asc" {% if request.args.get('order_by') == 'deadline_asc' %}selected{% endif %}>Deadline (Earliest First)</option>
                         <option value="deadline_desc" {% if request.args.get('order_by') == 'deadline_desc' %}selected{% endif %}>Deadline (Latest First)</option>
+                        <option value="completed_asc" {% if request.args.get('order_by') == 'completed_asc' %}selected{% endif %}>Completed (Not Completed First)</option>
+                        <option value="completed_desc" {% if request.args.get('order_by') == 'completed_desc' %}selected{% endif %}>Completed (Completed First)</option>
                     </select>
+                </div>
+                <div class="filter-section">
+                    <label><input type="checkbox" class="filter" value="completed"> Completed</label>
+                    <label><input type="checkbox" class="filter" value="not-completed"> Not completed</label>
+                    <label><input type="checkbox" class="filter" value="Low-priority"> Low priority</label>
+                    <label><input type="checkbox" class="filter" value="Medium-priority"> Medium priority</label>
+                    <label><input type="checkbox" class="filter" value="High-priority"> High priority</label>
+
+                    <button onclick="applyFilters(event)">Apply Filters</button>
                 </div>
                 {% for task in tasks %}
                     <div class="ag-courses_box">
