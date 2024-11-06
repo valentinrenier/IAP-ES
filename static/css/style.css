@@ -341,7 +341,6 @@ textarea {
   top: 20px; 
   margin-bottom: 40px;
   padding: 10px;
-  border: 1px solid #ccc;
   border-radius: 4px;
 }
 
@@ -349,7 +348,8 @@ textarea {
   position: relative;
   display: flex;
   align-items: center; 
-  justify-content: flex-start;
+  justify-content: space-between;
+  width: 100%;
   gap: 20px;
 }
 
