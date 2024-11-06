@@ -233,20 +233,6 @@
                         <option value="completed_desc" {% if request.args.get('order_by') == 'completed_desc' %}selected{% endif %}>Completed (Completed First)</option>
                     </select>
                 </div>
-                <div id="filterModal" class="modal">
-                    <div class="modal-content">
-                        <span id="closeModalBtn" class="close-btn">&times;</span>
-                        <div class="filter-section">
-                            <label><input type="checkbox" class="filter" value="completed"> Completed</label>
-                            <label><input type="checkbox" class="filter" value="not-completed"> Not completed</label>
-                            <label><input type="checkbox" class="filter" value="Low-priority"> Low priority</label>
-                            <label><input type="checkbox" class="filter" value="Medium-priority"> Medium priority</label>
-                            <label><input type="checkbox" class="filter" value="High-priority"> High priority</label>
-                            
-                            <button onclick="applyFilters(event)">Apply Filters</button>
-                        </div>
-                    </div>
-                </div>
                 <button id="openModalBtn" onclick="openFilterModal()">Filter Tasks</button>
             </div>
             {% if tasks %}
@@ -363,5 +349,20 @@
         </div>
     </div>
     
+    <div id="filterModal" class="modal">
+        <div class="modal-content">
+            <span id="closeModalBtn" class="close-button">&times;</span>
+            <div class="filter-section">
+                <label><input type="checkbox" class="filter" value="completed"> Completed</label>
+                <label><input type="checkbox" class="filter" value="not-completed"> Not completed</label>
+                <label><input type="checkbox" class="filter" value="Low-priority"> Low priority</label>
+                <label><input type="checkbox" class="filter" value="Medium-priority"> Medium priority</label>
+                <label><input type="checkbox" class="filter" value="High-priority"> High priority</label>
+                
+                <button onclick="applyFilters(event)">Apply Filters</button>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

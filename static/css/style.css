@@ -25,7 +25,6 @@ LICENSE : MIT
   -ms-flex-preferred-size: 100%;
   flex-basis: 100%;
   padding: 30px 20px;
-  /* background-color: #121212; */
   background-color:rgba(255, 204, 153, 0.9);
 
   margin: 0 15px 30px;
@@ -210,25 +209,25 @@ body {
 }
 
 label {
-  display: block;  /* Affiche chaque label sur une nouvelle ligne */
-  margin-bottom: 5px;  /* Espace sous le label */
-  text-align: left;  /* Aligne le texte à gauche */
-  font-weight: bold;  /* Met le label en gras */
+  display: block; 
+  margin-bottom: 5px; 
+  text-align: left;  
+  font-weight: bold;
 }
 
 input[type="text"],
 input[type="date"],
 textarea {
-  width: calc(100% - 20px);  /* Largeur de l'input avec marge */
-  padding: 10px;  /* Espace intérieur */
-  border: 1px solid #ccc;  /* Bordure grise */
-  border-radius: 5px;  /* Coins arrondis */
-  margin-bottom: 15px;  /* Espace entre les champs */
-  font-size: 14px;  /* Taille de police */
+  width: calc(100% - 20px);
+  padding: 10px;  
+  border: 1px solid #ccc; 
+  border-radius: 5px;
+  margin-bottom: 15px; 
+  font-size: 14px;  
 }
 
 textarea {
-  resize: none;  /* Empêche le redimensionnement */
+  resize: none; 
 }
 
 .close {
@@ -246,17 +245,17 @@ textarea {
 }
 
 .close-button {
-  position: absolute;  /* Positionnement absolu pour le placer en haut à droite */
-  top: 10px;          /* Espace du haut */
-  right: 10px;        /* Espace à droite */
-  font-size: 24px;    /* Taille de la croix */
-  font-weight: bold;  /* Rendre la croix en gras */
-  color: #d9534f;     /* Couleur rouge pour la croix */
-  cursor: pointer;    /* Changement du curseur pour indiquer que c'est cliquable */
+  position: absolute; 
+  top: 10px;         
+  right: 10px;   
+  font-size: 24px;   
+  font-weight: bold;
+  color: #d9534f;     
+  cursor: pointer;    
 }
 
 .close-button:hover {
-  color: #c9302c;     /* Changement de couleur au survol */
+  color: #c9302c;   
 }
 
 .form-container select {
@@ -269,84 +268,89 @@ textarea {
 
 .delete-button {
   min-width: 60px;
-  background-color: red; /* Couleur rouge */
+  background-color: red;
   margin-left: 20px;
-  color: white; /* Texte blanc */
-  border: none; /* Pas de bordure */
-  padding: 5px 10px; /* Padding pour un meilleur aspect */
-  cursor: pointer; /* Change le curseur pour pointer */
-  border-radius: 5px; /* Coins arrondis */
+  color: white;
+  border: none; 
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
 }
 
 .modify-button {
   min-width: 60px;
-  background-color: yellowgreen; /* Couleur rouge */
+  background-color: yellowgreen; 
   margin-left: 20px;
-  color: black; /* Texte blanc */
-  border: none; /* Pas de bordure */
-  padding: 5px 10px; /* Padding pour un meilleur aspect */
-  cursor: pointer; /* Change le curseur pour pointer */
-  border-radius: 5px; /* Coins arrondis */
+  color: black; 
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer; 
+  border-radius: 5px; 
 }
 
 .flash-message {
   position: fixed;
-  top: 20px; /* Positionnez le message en haut de la page */
-  left: 20px; /* Positionnez-le à droite */
-  background-color: #4CAF50; /* Couleur de fond verte */
-  color: white; /* Couleur du texte */
-  padding: 15px; /* Espacement interne */
-  border-radius: 5px; /* Coins arrondis */
-  z-index: 1000; /* Assurez-vous qu'il soit au-dessus des autres éléments */
-  transition: opacity 0.5s ease; /* Transition douce pour l'opacité */
+  top: 20px; 
+  left: 20px; 
+  background-color: #4CAF50; 
+  color: white; 
+  padding: 15px; 
+  border-radius: 5px; 
+  z-index: 1000; 
+  transition: opacity 0.5s ease; 
 }
 
 .validation-image {
-  width: 50px;                /* Ajustez la taille selon vos besoins */
-  height: auto;               /* Garder les proportions de l'image */
-  margin-right: 10px;         /* Espacement à droite de l'image */
-  background: none;           /* Assurez-vous qu'il n'y a pas de fond */
-  border: none;               /* Assurez-vous qu'il n'y a pas de bordure */
+  width: 50px;                
+  height: auto;               
+  margin-right: 10px;        
+  background: none;           
+  border: none;               
 }
 
 .btn-submit {
-  background-color: #007BFF;      /* Couleur de fond bleue */
-  color: #fff;                    /* Texte blanc */
-  border: none;                   /* Pas de bordure */
-  border-radius: 5px;             /* Bordures arrondies */
-  padding: 10px 20px;             /* Taille du bouton */
-  font-size: 16px;                /* Taille du texte */
-  cursor: pointer;                /* Curseur de la main */
-  transition: background-color 0.3s ease, transform 0.2s ease; /* Animation */
+  background-color: #007BFF;      
+  color: #fff;                    
+  border: none;                   
+  border-radius: 5px;             
+  padding: 10px 20px;            
+  font-size: 16px;                
+  cursor: pointer;                
+  transition: background-color 0.3s ease, transform 0.2s ease; 
 }
 
-/* Effet hover */
 .btn-submit:hover {
-  background-color: #0056b3;      /* Couleur plus foncée au survol */
-  transform: scale(1.05);         /* Légère augmentation de la taille */
+  background-color: #0056b3;      
+  transform: scale(1.05);         
 }
 
-/* Effet clic */
 .btn-submit:active {
-  background-color: #003d80;      /* Couleur plus foncée lorsqu'on clique */
-  transform: scale(0.95);         /* Légère réduction de la taille pour effet visuel */
+  background-color: #003d80;     
+  transform: scale(0.95);        
 }
 
-/* Bouton désactivé */
 .btn-submit:disabled {
-  background-color: #cccccc;      /* Grisé */
-  cursor: not-allowed;            /* Curseur interdit */
-  opacity: 0.7;                   /* Opacité réduite */
+  background-color: #cccccc;     
+  cursor: not-allowed;            
+  opacity: 0.7;                   
 }
 
 .dropdown {
-  position: relative; /* Positionne le dropdown par rapport au conteneur */
-  right: 20px; /* Éloigne le dropdown du bord droit */
-  top: 20px; /* Éloigne le dropdown du haut */
+  display: inline-block;
+  right: 20px;
+  top: 20px; 
   margin-bottom: 40px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+
+.filters-container {
+  position: relative;
+  display: flex;
+  align-items: center; 
+  justify-content: flex-start;
+  gap: 20px;
 }
 
 @media only screen and (max-width: 979px) {
