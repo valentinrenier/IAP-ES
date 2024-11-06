@@ -219,34 +219,36 @@
         <button class="logout-button" onclick="window.location.href='{{ url_for('auth_logout') }}'">Log Out</button>
         <button class="btn-submit" onclick="openModal()">Add a task</button>
         <div class="ag-format-container">
-            <div class="dropdown">
-                <label for="order_by">Sort by:</label>
-                <select id="order_by" name="order_by" onchange="applyOrder(event)">
-                    <option value="created_at_asc" {% if request.args.get('order_by') == 'created_at_asc' %}selected{% endif %}>Date Created (Oldest First)</option>
-                    <option value="created_at_desc" {% if request.args.get('order_by') == 'created_at_desc' %}selected{% endif %}>Date Created (Newest First)</option>
-                    <option value="priority_asc" {% if request.args.get('order_by') == 'priority_asc' %}selected{% endif %}>Priority (Low to High)</option>
-                    <option value="priority_desc" {% if request.args.get('order_by') == 'priority_desc' %}selected{% endif %}>Priority (High to Low)</option>
-                    <option value="deadline_asc" {% if request.args.get('order_by') == 'deadline_asc' %}selected{% endif %}>Deadline (Earliest First)</option>
-                    <option value="deadline_desc" {% if request.args.get('order_by') == 'deadline_desc' %}selected{% endif %}>Deadline (Latest First)</option>
-                    <option value="completed_asc" {% if request.args.get('order_by') == 'completed_asc' %}selected{% endif %}>Completed (Not Completed First)</option>
-                    <option value="completed_desc" {% if request.args.get('order_by') == 'completed_desc' %}selected{% endif %}>Completed (Completed First)</option>
-                </select>
-            </div>
-            <div id="filterModal" class="modal">
-                <div class="modal-content">
-                    <span id="closeModalBtn" class="close-btn">&times;</span>
-                    <div class="filter-section">
-                        <label><input type="checkbox" class="filter" value="completed"> Completed</label>
-                        <label><input type="checkbox" class="filter" value="not-completed"> Not completed</label>
-                        <label><input type="checkbox" class="filter" value="Low-priority"> Low priority</label>
-                        <label><input type="checkbox" class="filter" value="Medium-priority"> Medium priority</label>
-                        <label><input type="checkbox" class="filter" value="High-priority"> High priority</label>
-                        
-                        <button onclick="applyFilters(event)">Apply Filters</button>
+            <div class="filters-container">
+                <div class="dropdown">
+                    <label for="order_by">Sort by:</label>
+                    <select id="order_by" name="order_by" onchange="applyOrder(event)">
+                        <option value="created_at_asc" {% if request.args.get('order_by') == 'created_at_asc' %}selected{% endif %}>Date Created (Oldest First)</option>
+                        <option value="created_at_desc" {% if request.args.get('order_by') == 'created_at_desc' %}selected{% endif %}>Date Created (Newest First)</option>
+                        <option value="priority_asc" {% if request.args.get('order_by') == 'priority_asc' %}selected{% endif %}>Priority (Low to High)</option>
+                        <option value="priority_desc" {% if request.args.get('order_by') == 'priority_desc' %}selected{% endif %}>Priority (High to Low)</option>
+                        <option value="deadline_asc" {% if request.args.get('order_by') == 'deadline_asc' %}selected{% endif %}>Deadline (Earliest First)</option>
+                        <option value="deadline_desc" {% if request.args.get('order_by') == 'deadline_desc' %}selected{% endif %}>Deadline (Latest First)</option>
+                        <option value="completed_asc" {% if request.args.get('order_by') == 'completed_asc' %}selected{% endif %}>Completed (Not Completed First)</option>
+                        <option value="completed_desc" {% if request.args.get('order_by') == 'completed_desc' %}selected{% endif %}>Completed (Completed First)</option>
+                    </select>
+                </div>
+                <div id="filterModal" class="modal">
+                    <div class="modal-content">
+                        <span id="closeModalBtn" class="close-btn">&times;</span>
+                        <div class="filter-section">
+                            <label><input type="checkbox" class="filter" value="completed"> Completed</label>
+                            <label><input type="checkbox" class="filter" value="not-completed"> Not completed</label>
+                            <label><input type="checkbox" class="filter" value="Low-priority"> Low priority</label>
+                            <label><input type="checkbox" class="filter" value="Medium-priority"> Medium priority</label>
+                            <label><input type="checkbox" class="filter" value="High-priority"> High priority</label>
+                            
+                            <button onclick="applyFilters(event)">Apply Filters</button>
+                        </div>
                     </div>
                 </div>
+                <button id="openModalBtn" onclick="openFilterModal()">Filter Tasks</button>
             </div>
-            <button id="openModalBtn" onclick="openFilterModal()">Filter Tasks</button>
             {% if tasks %}
                 {% for task in tasks %}
                     <div class="ag-courses_box">
