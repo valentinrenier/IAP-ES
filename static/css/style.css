@@ -340,9 +340,10 @@ textarea {
 }
 
 .dropdown {
-  position: absolute; /* Positionne le dropdown par rapport au conteneur */
+  position: relative; /* Positionne le dropdown par rapport au conteneur */
   right: 20px; /* Éloigne le dropdown du bord droit */
   top: 20px; /* Éloigne le dropdown du haut */
+  margin-bottom: 40px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
