@@ -79,7 +79,7 @@ def get_all_tasks(order_by, filters):
     }
 
     order_by_method = order_by_options.get(order_by)
-    
+
     show_completed = 'completed' in filters
     show_not_completed = 'not-completed' in filters
     show_priorities = [f.split('-')[0] for f in filters if 'priority' in f]
@@ -97,8 +97,7 @@ def get_all_tasks(order_by, filters):
         if show_priorities :
             query = query.filter(Task.priority.in_(show_priorities))
             
-        if order_by_method:
-            query = query.order_by(order_by_method)
+        query = query.order_by(order_by_method)
         tasks = query.all()
         return tasks
 

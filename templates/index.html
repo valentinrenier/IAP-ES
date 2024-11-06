@@ -13,7 +13,26 @@
             document.getElementById('addTaskModal').style.display = 'none';
         }
 
+        const openModalBtn = document.getElementById("openModalBtn");
+        const filterModal = document.getElementById("filterModal");
+        const closeModalBtn = document.getElementById("closeModalBtn");
+
+        // Fonction pour ouvrir la modale
+        openModalBtn.onclick = function() {
+            filterModal.style.display = "flex";
+            loadSavedFilters();  // Charger les filtres sauvegardés dans la modale
+        }
+
+        // Fonction pour fermer la modale
+        closeModalBtn.onclick = function() {
+            filterModal.style.display = "none";
+        }
+
+
         window.onclick = function(event) {
+            if (event.target == filterModal) {
+                filterModal.style.display = 'none';
+            }
             const modal = document.getElementById('addTaskModal');
             if (event.target == modal) {
                 closeModal();
@@ -124,17 +143,12 @@
             }
         }
 
-        function onOrderByChange(selectedOrder) {
-            if (selectedOrder) {
-                window.location.href = `?order_by=${selectedOrder}`;
-            }
-        }
         function applyFilters(event) {
             event.preventDefault();
 
             const filters = Array.from(document.querySelectorAll('.filter:checked')).map(filter => filter.value);
 
-            const orderBy = document.getElementById('orderBy') ? document.getElementById('orderBy').value : 'created_at_desc';
+            const orderBy = event.target.value || 'created_at_desc'; 
 
             const params = new URLSearchParams();
             filters.forEach(filter => params.append('filters[]', filter));
@@ -142,8 +156,23 @@
 
             const url = `/ui?${params.toString()}`;
             window.location.href = url;
+            filterModal.style.display = "none";
         }
 
+        function loadSavedFilters() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const filtersFromURL = urlParams.getAll('filters[]');
+
+            // Cocher les filtres qui sont déjà dans l'URL
+            const checkboxes = document.querySelectorAll('.filter');
+            checkboxes.forEach(checkbox => {
+                if (filtersFromURL.includes(checkbox.value)) {
+                    checkbox.checked = true;
+                } else {
+                    checkbox.checked = false;
+                }
+            });
+        }
 
     </script>
     <style>
@@ -170,30 +199,23 @@
     {% if user %}
         <button class="logout-button" onclick="window.location.href='{{ url_for('auth_logout') }}'">Log Out</button>
         <button class="btn-submit" onclick="openModal()">Add a task</button>
-        {% if tasks %}
-            <div class="ag-format-container">
-                <div class="dropdown">
-                    <label for="order_by">Sort by:</label>
-                    <select id="order_by" name="order_by" onchange="onOrderByChange(this.value)">
-                        <option value="created_at_asc" {% if request.args.get('order_by') == 'created_at_asc' %}selected{% endif %}>Date Created (Oldest First)</option>
-                        <option value="created_at_desc" {% if request.args.get('order_by') == 'created_at_desc' %}selected{% endif %}>Date Created (Newest First)</option>
-                        <option value="priority_asc" {% if request.args.get('order_by') == 'priority_asc' %}selected{% endif %}>Priority (Low to High)</option>
-                        <option value="priority_desc" {% if request.args.get('order_by') == 'priority_desc' %}selected{% endif %}>Priority (High to Low)</option>
-                        <option value="deadline_asc" {% if request.args.get('order_by') == 'deadline_asc' %}selected{% endif %}>Deadline (Earliest First)</option>
-                        <option value="deadline_desc" {% if request.args.get('order_by') == 'deadline_desc' %}selected{% endif %}>Deadline (Latest First)</option>
-                        <option value="completed_asc" {% if request.args.get('order_by') == 'completed_asc' %}selected{% endif %}>Completed (Not Completed First)</option>
-                        <option value="completed_desc" {% if request.args.get('order_by') == 'completed_desc' %}selected{% endif %}>Completed (Completed First)</option>
-                    </select>
-                </div>
-                <div class="filter-section">
-                    <label><input type="checkbox" class="filter" value="completed"> Completed</label>
-                    <label><input type="checkbox" class="filter" value="not-completed"> Not completed</label>
-                    <label><input type="checkbox" class="filter" value="Low-priority"> Low priority</label>
-                    <label><input type="checkbox" class="filter" value="Medium-priority"> Medium priority</label>
-                    <label><input type="checkbox" class="filter" value="High-priority"> High priority</label>
-
-                    <button onclick="applyFilters(event)">Apply Filters</button>
-                </div>
+        <div class="ag-format-container">
+            <div class="dropdown">
+                <label for="order_by">Sort by:</label>
+                <select id="order_by" name="order_by" onchange="applyFilters(this.value)">
+                    <option value="created_at_asc" {% if request.args.get('order_by') == 'created_at_asc' %}selected{% endif %}>Date Created (Oldest First)</option>
+                    <option value="created_at_desc" {% if request.args.get('order_by') == 'created_at_desc' %}selected{% endif %}>Date Created (Newest First)</option>
+                    <option value="priority_asc" {% if request.args.get('order_by') == 'priority_asc' %}selected{% endif %}>Priority (Low to High)</option>
+                    <option value="priority_desc" {% if request.args.get('order_by') == 'priority_desc' %}selected{% endif %}>Priority (High to Low)</option>
+                    <option value="deadline_asc" {% if request.args.get('order_by') == 'deadline_asc' %}selected{% endif %}>Deadline (Earliest First)</option>
+                    <option value="deadline_desc" {% if request.args.get('order_by') == 'deadline_desc' %}selected{% endif %}>Deadline (Latest First)</option>
+                    <option value="completed_asc" {% if request.args.get('order_by') == 'completed_asc' %}selected{% endif %}>Completed (Not Completed First)</option>
+                    <option value="completed_desc" {% if request.args.get('order_by') == 'completed_desc' %}selected{% endif %}>Completed (Completed First)</option>
+                </select>
+            </div>
+            
+            <button id="openModalBtn">Filter Tasks</button>
+            {% if tasks %}
                 {% for task in tasks %}
                     <div class="ag-courses_box">
                         <div class="ag-courses_item">
@@ -307,7 +329,20 @@
         </div>
     </div>
     
-
+    <div id="filterModal" class="modal">
+        <div class="modal-content">
+            <span id="closeModalBtn" class="close-btn">&times;</span>
+            <div class="filter-section">
+                <label><input type="checkbox" class="filter" value="completed"> Completed</label>
+                <label><input type="checkbox" class="filter" value="not-completed"> Not completed</label>
+                <label><input type="checkbox" class="filter" value="Low-priority"> Low priority</label>
+                <label><input type="checkbox" class="filter" value="Medium-priority"> Medium priority</label>
+                <label><input type="checkbox" class="filter" value="High-priority"> High priority</label>
+                
+                <button onclick="applyFilters(event)">Apply Filters</button>
+            </div>
+        </div>
+    </div>
     
 </body>
 </html>
