@@ -337,11 +337,6 @@ textarea {
 
 .dropdown {
   display: inline-block;
-  right: 20px;
-  top: 20px; 
-  margin-bottom: 40px;
-  padding: 10px;
-  border-radius: 4px;
 }
 
 .filters-container {
