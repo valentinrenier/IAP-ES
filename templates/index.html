@@ -141,17 +141,16 @@
 
             const orderBy = document.getElementById('order_by').value || 'created_at_desc'; 
 
+            const savedFilters = loadSavedFilters();
+            savedFilters.forEach(filter => {
+                if (!filters.includes(filter)) {
+                    filters.push(filter);
+                }
+            });
+            
             const params = new URLSearchParams();
             filters.forEach(filter => params.append('filters[]', filter));
             params.append('order_by', orderBy);
-
-            const currentParams = new URLSearchParams(window.location.search);
-            currentParams.forEach((value, key) => {
-                // Si les filtres sont déjà dans l'URL, ne les ajoutez pas à nouveau
-                if (key !== 'filters[]' && !params.has(key)) {
-                    params.append(key, value);
-                }
-            });
 
             const url = `/ui?${params.toString()}`;
             window.location.href = url;
