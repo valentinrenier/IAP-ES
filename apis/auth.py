@@ -1,12 +1,11 @@
-from flask import Flask, redirect, render_template, request, url_for, session, make_response, jsonify, flash
-from flask_restx import Namespace,Resource,fields
-from datetime import datetime, timedelta
-from flask_sqlalchemy import SQLAlchemy
+from flask import redirect, request, url_for, session, make_response, flash
+from flask_restx import Namespace,Resource
+from datetime import timedelta
 import requests
 import jwt
 import time
 from secret import COGNITO_LINK, CLIENT_ID, RESPONSE_TYPE, SCOPE, CALLBACK_URI, REDIRECT_URI, JWKS_URL
-from application import application
+from services.logging_service import logger
 
 api=Namespace("auth",path="/auth",description="Authentication operations")
 
@@ -43,15 +42,15 @@ def check_token():
     try:
         jwt.decode(access_token, public_key, algorithms=['RS256'])
         if is_token_expired(access_token):
-            application.logger.info("Token expired, trying to refresh the token")
+            logger.info("Token expired, trying to refresh the token")
             if refresh_access_token(): 
-                application.logger.info("Token refreshed successfully")
+                logger.info("Token refreshed successfully")
                 return True
-            application.logger.info("Unable to refresh the token")
+            logger.info("Unable to refresh the token")
             return False
 
         else : 
-            application.logger.info("The token is valid")
+            logger.info("The token is valid")
             return True
     except jwt.ExpiredSignatureError:
         return False
@@ -61,10 +60,10 @@ def check_token():
 def refresh_access_token():
     refresh_token = request.cookies.get('refresh_token')
     if not refresh_token:
-        application.logger.info('Refresh token not set')
+        logger.info('Refresh token not set')
         return {'error': 'No refresh token found'}, 400
     if is_token_expired(refresh_token):
-        application.logger.info("Refresh token is expired")
+        logger.info("Refresh token is expired")
         return False
 
     token_url = f"{COGNITO_LINK}/oauth2/token"
@@ -79,17 +78,17 @@ def refresh_access_token():
     
     response = requests.post(token_url, data=data, headers=headers)
     if response.status_code != 200:
-        application.logger.info(f"The response code isn't 200, error : {response.status_code}")
+        logger.info(f"The response code isn't 200, error : {response.status_code}")
         return False
 
     tokens = response.json()
     access_token = tokens.get('access_token')
     if not access_token:
-        application.logger.info("Cognito didn't send the access token in the response")
+        logger.info("Cognito didn't send the access token in the response")
         return {'error': 'No access token found in refresh response'}, 400
     
     response.set_cookie("access_token", access_token, max_age=timedelta(hours=1), httponly=True, secure=True)
-    application.logger.info("Token successfully refreshed")
+    logger.info("Token successfully refreshed")
     return True 
 
 @api.route("/login")
