@@ -42,11 +42,9 @@ def check_token():
     try:
         jwt.decode(access_token, public_key, algorithms=['RS256'])
         if is_token_expired(access_token):
-            refresh_token = request.cookies.get('refresh_token')
-            if not is_token_expired(refresh_token) :
-                if refresh_access_token(): 
-                    return True
-                return False
+            if refresh_access_token(): 
+                return True
+            return False
 
         else : 
             return True
@@ -59,15 +57,20 @@ def refresh_access_token():
     refresh_token = request.cookies.get('refresh_token')
     if not refresh_token:
         return {'error': 'No refresh token found'}, 400
-    
+    if is_token_expired(refresh_token):
+        return False
+
     token_url = f"{COGNITO_LINK}/oauth2/token"
     data = {
         'grant_type': 'refresh_token',
         'client_id': CLIENT_ID,
         'refresh_token': refresh_token,
     }
+    headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
     
-    response = requests.post(token_url, data=data)
+    response = requests.post(token_url, data=data, headers=headers)
     if response.status_code != 200:
         return False
 
@@ -126,7 +129,7 @@ class Callback(Resource):
         
 
         response = make_response(redirect(url_for('ui_index')), 302, {'Content-Type': 'text/html'})
-        response.set_cookie("access_token", access_token, max_age=timedelta(hours=1), httponly=True, secure=True)
+        response.set_cookie("access_token", access_token, max_age=timedelta(seconds=1), httponly=True, secure=True)
         response.set_cookie("refresh_token", refresh_token, max_age=timedelta(days=30), httponly=True, secure=True)
         flash("Successfully logged in", 'info')
 
