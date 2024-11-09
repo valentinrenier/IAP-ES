@@ -31,6 +31,7 @@ def check_token():
     access_token = request.cookies.get('access_token')
 
     if not access_token:
+        logger.info("Cookies reçus : %s", request.cookies)
         logger.info("No access_token")
         return False
 
