@@ -171,8 +171,11 @@
             const params = new URLSearchParams();
             filters.forEach(filter => params.append('filters[]', filter));
             params.append('order_by', orderBy);
+            console.log('params')
+            console.log(params.toString())
 
             const url = `/ui?${params.toString()}`;
+            console.log(url)
             window.location.href = url;
             filterModal.style.display = "none";
         }
