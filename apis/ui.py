@@ -5,7 +5,7 @@ from services.db_services import get_all_tasks
 
 api=Namespace("ui",path="/ui",description="UI")
 
-@api.route('/')
+@api.route('')
 class index(Resource):
     def get(self):
         check = check_token()
