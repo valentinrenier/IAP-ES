@@ -17,7 +17,10 @@ def is_token_expired(token):
     try:
         decoded_token = jwt.decode(token, options={"verify_signature": False})
         if 'exp' in decoded_token:
+            logger.info(f"Expiration of token : {decoded_token['exp']}, time : {time.time()}")
             return decoded_token['exp'] < time.time()
+        else :
+            logger.info("No expiration found")
     except jwt.ExpiredSignatureError:
         return True  
     except Exception as e:
