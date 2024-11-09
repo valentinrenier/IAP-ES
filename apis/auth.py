@@ -66,9 +66,6 @@ def refresh_access_token():
     if not refresh_token:
         logger.info('Refresh token not set')
         return False
-    if is_token_expired(refresh_token):
-        logger.info("Refresh token is expired")
-        return False
 
     token_url = f"{COGNITO_LINK}/oauth2/token"
     data = {
@@ -96,12 +93,6 @@ def refresh_access_token():
     logger.info("Token successfully refreshed")
     return response 
 
-def add_base64_padding(token):
-    token = token.rstrip("=") 
-    padding = len(token) % 4
-    if padding:
-        token += "=" * (4 - padding)
-    return token
 
 @api.route("/login")
 class Login(Resource):
@@ -148,9 +139,6 @@ class Callback(Resource):
             session['cognito:username'] = user_info.get("cognito:username", None)
         except Exception as e : 
             logger.info(f"Error decoding id_token : {e}")
-
-        access_token = add_base64_padding(access_token)
-        refresh_token = add_base64_padding(refresh_token)
 
         response = make_response(redirect(url_for('ui_index')), 302, {'Content-Type': 'text/html'})
         response.set_cookie("access_token", access_token, max_age=timedelta(seconds=10).total_seconds(), httponly=True, secure=True)
