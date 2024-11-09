@@ -29,11 +29,13 @@ def is_token_expired(token):
 
 def check_token():
     access_token = request.cookies.get('access_token')
+    refresh_token = request.cookies.get('refresh_token')
 
-    if not access_token:
-        logger.info("Cookies reçus : %s", request.cookies)
-        logger.info("No access_token")
+    if not access_token and not refresh_token:
+        logger.info("No access_token nor refresh_token")
         return False
+    elif not access_token and refresh_token :
+        return refresh_access_token()
 
     kid = jwt.get_unverified_header(access_token)['kid']
     jwks = requests.get(JWKS_URL).json()
@@ -46,18 +48,11 @@ def check_token():
     public_key = get_public_key(key)
 
     try:
-        logger.info("Trying to decode the token")
         jwt.decode(access_token, public_key, algorithms=['RS256'])
         if is_token_expired(access_token):
-            logger.info("Token expired, trying to refresh the token")
-            if refresh_access_token(): 
-                logger.info("Token refreshed successfully")
-                return True
-            logger.info("Unable to refresh the token")
+            logger.info("Token expired")
             return False
-
         else : 
-            logger.info("The token is valid")
             return True
     except jwt.ExpiredSignatureError:
         return False
@@ -68,7 +63,7 @@ def refresh_access_token():
     refresh_token = request.cookies.get('refresh_token')
     if not refresh_token:
         logger.info('Refresh token not set')
-        return {'error': 'No refresh token found'}, 400
+        return False
     if is_token_expired(refresh_token):
         logger.info("Refresh token is expired")
         return False
@@ -92,11 +87,12 @@ def refresh_access_token():
     access_token = tokens.get('access_token')
     if not access_token:
         logger.info("Cognito didn't send the access token in the response")
-        return {'error': 'No access token found in refresh response'}, 400
+        return False
     
-    response.set_cookie("access_token", access_token, max_age=timedelta(hours=1), httponly=True, secure=True)
+    response = make_response("Token refreshed")
+    response.set_cookie("access_token", access_token, max_age=timedelta(seconds=10), httponly=True, secure=True)
     logger.info("Token successfully refreshed")
-    return True 
+    return response 
 
 @api.route("/login")
 class Login(Resource):
@@ -144,7 +140,7 @@ class Callback(Resource):
         
 
         response = make_response(redirect(url_for('ui_index')), 302, {'Content-Type': 'text/html'})
-        response.set_cookie("access_token", access_token, max_age=timedelta(seconds=1), httponly=True, secure=True)
+        response.set_cookie("access_token", access_token, max_age=timedelta(seconds=10), httponly=True, secure=True)
         response.set_cookie("refresh_token", refresh_token, max_age=timedelta(days=30), httponly=True, secure=True)
         flash("Successfully logged in", 'info')
 
