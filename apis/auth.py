@@ -21,6 +21,7 @@ def is_token_expired(token):
             return decoded_token['exp'] < time.time()
         else :
             logger.info("No expiration found")
+            return False
     except jwt.ExpiredSignatureError:
         return True  
     except Exception as e:
