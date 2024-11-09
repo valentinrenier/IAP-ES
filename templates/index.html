@@ -62,6 +62,11 @@
             const deadline = document.getElementById("editDeadline").value;
             const completed = (document.getElementById("editCompleted").value === 'True');
 
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderBy = urlParams.get('order_by') || 'created_at_desc';
+            const filters = urlParams.getAll('filters[]'); 
+
+
             fetch(`/api/modify/${id}`, {
                 method: 'POST', 
                 headers: {
@@ -82,7 +87,8 @@
                 throw new Error("Error ");
             })
             .then(data => {
-                location.reload();
+                const redirectUrl = `/ui?order_by=${orderBy}&filters[]=${filters.join('&filters[]=')}`;
+                window.location.href = redirectUrl; // Redirige avec les paramètres
             })
             .catch(error => {
                 console.error('Erreur:', error);
@@ -271,6 +277,10 @@
                             {% endif %}
                             <button class="modify-button" onclick="openEditModal('{{ task.id }}', '{{ task.title }}', '{{ task.description }}','{{ task.priority }}','{{ task.deadline }}','{{ task.completed|e }}' )">Edit</button>
                             <form action="{{ url_for('api_delete', task_id=task.id) }}" method="POST" style="display:inline;">
+                                <input type="hidden" name="order_by" value="{{ request.args.get('order_by', 'created_at_desc') }}">
+                                <input type="hidden" name="filters" value="{{ request.args.getlist('filters[]') }}">
+    
+                                
                                 <button type="submit" class="delete-button">Delete</button>
                             </form>
                         </div>

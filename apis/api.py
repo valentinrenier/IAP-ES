@@ -19,36 +19,31 @@ class Add(Resource):
 
         if add_task(title, description, priority, deadline) == True :
             flash("Task successfully added", 'info')
-            return make_response(
-                redirect(url_for('ui_index')), 
-                302, 
-                {'Content-Type': 'text/html'}
-                )
+            return {'message': 'Task added'}, 200
         else :
             flash("No task to delete", 'error')
-            return make_response(
-                redirect(url_for('ui_index')), 
-                302, 
-                {'Content-Type': 'text/html'}
-                )
+            return {'error': 'Task not deleted'}, 404
 
 @api.route('/delete/<int:task_id>')
 class Delete(Resource):
     def post(self, task_id):
+        order_by = request.form.get('order_by', 'created_at_desc')  # 'created_at_desc' par défaut
+        filters = request.form.getlist('filters')  # Récupère tous les filtres (s'ils existent)
+
         if delete_task(task_id) is True :
             flash("Task successfully deleted", 'info')
             return make_response(
-                redirect(url_for('ui_index')), 
+                redirect(url_for('ui_index', order_by=order_by, filters=filters)), 
                 302, 
                 {'Content-Type': 'text/html'}
                 )
         else :
             flash("Task not deleted", 'error')
             return make_response(
-                    redirect(url_for('ui_index')), 
-                    302, 
-                    {'Content-Type': 'text/html'}
-                    )
+                redirect(url_for('ui_index')), 
+                302, 
+                {'Content-Type': 'text/html'}
+                )
 
 
 @api.route('/modify/<int:task_id>')
@@ -57,15 +52,7 @@ class Modify(Resource):
         data = request.json
         if modify_task(task_id, data) is True :
             flash("Task successfully modified", 'info')
-            return make_response(
-                redirect(url_for('ui_index')), 
-                302, 
-                {'Content-Type': 'text/html'}
-                )
+            return {'message': 'Task updated successfully'}, 200
         else : 
             flash("Task not modified", 'error')
-            return make_response(
-                redirect(url_for('ui_index')), 
-                302, 
-                {'Content-Type': 'text/html'}
-                )
+            return {'error': 'Task not modified'}, 404
