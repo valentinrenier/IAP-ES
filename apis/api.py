@@ -29,18 +29,23 @@ class Delete(Resource):
     def post(self, task_id):
         order_by = request.form.get('order_by', 'created_at_desc')  # 'created_at_desc' par défaut
         filters = request.form.getlist('filters')  # Récupère tous les filtres (s'ils existent)
+        params = []
+        params.append(f'order_by={order_by}')
+        for filter in filters:
+            params.append(f'filters={filter}')
+        new_url = f"{url_for('ui_index')}?{'&'.join(params)}"
 
         if delete_task(task_id) is True :
             flash("Task successfully deleted", 'info')
             return make_response(
-                redirect(url_for('ui_index', order_by=order_by, filters=filters)), 
+                redirect(new_url), 
                 302, 
                 {'Content-Type': 'text/html'}
                 )
         else :
             flash("Task not deleted", 'error')
             return make_response(
-                redirect(url_for('ui_index')), 
+                redirect(new_url), 
                 302, 
                 {'Content-Type': 'text/html'}
                 )
