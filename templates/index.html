@@ -156,7 +156,7 @@
             filters.forEach(filter => params.append('filters[]', filter));
             params.append('order_by', orderBy);
 
-            const url = `/ui?${params.toString()}`;
+            const url = `/ui/index?${params.toString()}`;
             window.location.href = url;
             filterModal.style.display = "none";
         }
@@ -172,7 +172,7 @@
             filters.forEach(filter => params.append('filters[]', filter));
             params.append('order_by', orderBy);
 
-            const url = `/ui?${params.toString()}`;
+            const url = `/ui/index?${params.toString()}`;
             window.location.href = url;
             filterModal.style.display = "none";
         }
