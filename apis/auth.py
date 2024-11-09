@@ -91,7 +91,7 @@ def refresh_access_token():
         return False
     
     response = make_response("Token refreshed")
-    response.set_cookie("access_token", access_token, max_age=timedelta(seconds=10), httponly=True, secure=True)
+    response.set_cookie("access_token", access_token, max_age=timedelta(seconds=10).total_seconds(), httponly=True, secure=True)
     logger.info("Token successfully refreshed")
     return response 
 
@@ -141,8 +141,8 @@ class Callback(Resource):
         
 
         response = make_response(redirect(url_for('ui_index')), 302, {'Content-Type': 'text/html'})
-        response.set_cookie("access_token", access_token, max_age=timedelta(seconds=10), httponly=True, secure=True)
-        response.set_cookie("refresh_token", refresh_token, max_age=timedelta(days=30), httponly=True, secure=True)
+        response.set_cookie("access_token", access_token, max_age=timedelta(seconds=10).total_seconds(), httponly=True, secure=True)
+        response.set_cookie("refresh_token", refresh_token, max_age=timedelta(days=30).total_seconds(), httponly=True, secure=True)
         flash("Successfully logged in", 'info')
 
         return response
