@@ -28,6 +28,7 @@ def check_token():
     access_token = request.cookies.get('access_token')
 
     if not access_token:
+        logger.info("No access_token")
         return False
 
     kid = jwt.get_unverified_header(access_token)['kid']
@@ -35,11 +36,13 @@ def check_token():
     key = next((key for key in jwks['keys'] if key['kid'] == kid), None)
 
     if not key:
+        logger.info("No key found")
         return False
 
     public_key = get_public_key(key)
 
     try:
+        logger.info("Trying to decode the token")
         jwt.decode(access_token, public_key, algorithms=['RS256'])
         if is_token_expired(access_token):
             logger.info("Token expired, trying to refresh the token")
