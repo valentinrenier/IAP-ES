@@ -96,6 +96,13 @@ def refresh_access_token():
     logger.info("Token successfully refreshed")
     return response 
 
+def add_base64_padding(token):
+    token = token.rstrip("=") 
+    padding = len(token) % 4
+    if padding:
+        token += "=" * (4 - padding)
+    return token
+
 @api.route("/login")
 class Login(Resource):
     def get(self):
@@ -121,7 +128,6 @@ class Callback(Resource):
 
         tokens = response.json()
         
-        session['access_token'] = tokens.get('access_token')
         access_token = tokens.get('access_token')
         if access_token is None:
             return {'message': 'Access token not found in response!'}, 400
@@ -135,11 +141,16 @@ class Callback(Resource):
             return {'error': 'ID token not found in response'}, 400
         
         #TODO Secure this
-        user_info = jwt.decode(id_token, options={"verify_signature": False})
+        try :
+            user_info = jwt.decode(id_token, options={"verify_signature": False})
 
-        session['preferred_username'] = user_info.get("preferred_username", None)
-        session['cognito:username'] = user_info.get("cognito:username", None)
-        
+            session['preferred_username'] = user_info.get("preferred_username", None)
+            session['cognito:username'] = user_info.get("cognito:username", None)
+        except Exception as e : 
+            logger.info(f"Error decoding id_token : {e}")
+
+        access_token = add_base64_padding(access_token)
+        refresh_token = add_base64_padding(refresh_token)
 
         response = make_response(redirect(url_for('ui_index')), 302, {'Content-Type': 'text/html'})
         response.set_cookie("access_token", access_token, max_age=timedelta(seconds=10).total_seconds(), httponly=True, secure=True)
