@@ -30,9 +30,9 @@ class Delete(Resource):
         order_by = request.form.get('order_by', 'created_at_desc')  # 'created_at_desc' par défaut
         filters = request.form.getlist('filters')  # Récupère tous les filtres (s'ils existent)
         params = []
-        params.append(f'order_by={order_by}')
         for filter in filters:
-            params.append(f'filters={filter}')
+            params.append(f'filters[]={filter}')
+        params.append(f'order_by={order_by}')
         new_url = f"{url_for('ui_index')}?{'&'.join(params)}"
 
         if delete_task(task_id) is True :
