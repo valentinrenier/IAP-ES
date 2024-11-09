@@ -54,8 +54,9 @@ def modify_task(task_id, data):
                 task.completed = data.get('completed', task.completed)
                 
                 session.commit() 
-                flash("Task successfully modified", 'info')
                 return True 
+            else :
+                return False
     except :
         return False
     

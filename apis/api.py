@@ -19,42 +19,53 @@ class Add(Resource):
 
         if add_task(title, description, priority, deadline) == True :
             flash("Task successfully added", 'info')
-            return {'message': 'Task added'}, 200
+            return make_response(
+                redirect(url_for('ui_index')), 
+                302, 
+                {'Content-Type': 'text/html'}
+                )
         else :
             flash("No task to delete", 'error')
-            return {'error': 'Task not deleted'}, 404
+            return make_response(
+                redirect(url_for('ui_index')), 
+                302, 
+                {'Content-Type': 'text/html'}
+                )
 
 @api.route('/delete/<int:task_id>')
 class Delete(Resource):
     def post(self, task_id):
-        if delete_task(task_id) == True :
+        if delete_task(task_id) is True :
             flash("Task successfully deleted", 'info')
-            with Session(engine) as session :
-                tasks = session.query(Task).filter(Task.user == flask_session['cognito:username']).order_by(Task.created_at.desc()).all()
-                return make_response(
-                    render_template('index.html', tasks = tasks, user=True),
-                    302,
-                    {'Content-Type': 'text/html'}
+            return make_response(
+                redirect(url_for('ui_index')), 
+                302, 
+                {'Content-Type': 'text/html'}
                 )
         else :
             flash("Task not deleted", 'error')
-            with Session(engine) as session :
-                tasks = session.query(Task).filter(Task.user == flask_session['cognito:username']).order_by(Task.created_at.desc()).all()
-                return make_response(
-                    render_template('index.html', tasks = tasks, user=True),
-                    400,
+            return make_response(
+                    redirect(url_for('ui_index')), 
+                    302, 
                     {'Content-Type': 'text/html'}
-                )
-            return {'error': 'Task not deleted'}, 400
+                    )
 
 
 @api.route('/modify/<int:task_id>')
 class Modify(Resource):
     def post(self, task_id):
         data = request.json
-        if modify_task(task_id, data) == True :
+        if modify_task(task_id, data) is True :
             flash("Task successfully modified", 'info')
-            return {'message': 'Task updated successfully'}, 200
+            return make_response(
+                redirect(url_for('ui_index')), 
+                302, 
+                {'Content-Type': 'text/html'}
+                )
         else : 
             flash("Task not modified", 'error')
-            return {'error': 'Task not modified'}, 404
+            return make_response(
+                redirect(url_for('ui_index')), 
+                302, 
+                {'Content-Type': 'text/html'}
+                )
