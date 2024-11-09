@@ -23,10 +23,11 @@ def is_token_expired(token):
             logger.info("No expiration found")
             return False
     except jwt.ExpiredSignatureError:
+        logger.info("jwt.ExpiredSignatureError")
         return True  
     except Exception as e:
+        logger.info(f"Exception : {e}")
         return True
-    return False
 
 def check_token():
     access_token = request.cookies.get('access_token')
