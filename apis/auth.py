@@ -89,7 +89,7 @@ def refresh_access_token():
         return False
     
     response = make_response("Token refreshed")
-    response.set_cookie("access_token", access_token, max_age=timedelta(seconds=10).total_seconds(), httponly=True, secure=True)
+    response.set_cookie("access_token", access_token, max_age=timedelta(seconds=3600).total_seconds(), httponly=True, secure=True)
     logger.info("Token successfully refreshed")
     return response 
 
@@ -141,7 +141,7 @@ class Callback(Resource):
             logger.info(f"Error decoding id_token : {e}")
 
         response = make_response(redirect(url_for('ui_index')), 302, {'Content-Type': 'text/html'})
-        response.set_cookie("access_token", access_token, max_age=timedelta(seconds=10).total_seconds(), httponly=True, secure=True)
+        response.set_cookie("access_token", access_token, max_age=timedelta(seconds=3600).total_seconds(), httponly=True, secure=True)
         response.set_cookie("refresh_token", refresh_token, max_age=timedelta(days=30).total_seconds(), httponly=True, secure=True)
         flash("Successfully logged in", 'info')
 
