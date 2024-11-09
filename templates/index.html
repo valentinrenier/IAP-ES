@@ -87,8 +87,9 @@
                 throw new Error("Error ");
             })
             .then(data => {
-                const redirectUrl = `/ui?order_by=${orderBy}&filters[]=${filters.join('&filters[]=')}`;
-                window.location.href = redirectUrl; // Redirige avec les paramètres
+                closeEditModal();
+                const redirectUrl = `/ui/index?order_by=${orderBy}&filters[]=${filters.join('&filters[]=')}`;
+                window.location.href = redirectUrl; 
             })
             .catch(error => {
                 console.error('Erreur:', error);
@@ -102,6 +103,11 @@
             const description = document.getElementById('description').value;
             const priority = document.getElementById('priority').value;
             const deadline = document.getElementById('deadline').value;
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderBy = urlParams.get('order_by') || 'created_at_desc';
+            const filters = urlParams.getAll('filters[]'); 
+
 
             fetch('/api/add', {
                 method: 'POST',
@@ -123,7 +129,8 @@
             })
             .then(data => {
                 closeModal();
-                location.reload(); 
+                const redirectUrl = `/ui/index?order_by=${orderBy}&filters[]=${filters.join('&filters[]=')}`;
+                window.location.href = redirectUrl;  
             })
             .catch(error => {
                 console.error('Erreur:', error); 
