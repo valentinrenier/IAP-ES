@@ -96,12 +96,14 @@ def refresh_access_token():
 
 @api.route("/login")
 class Login(Resource):
+    @api.doc(description="Redirects to the Cognito login page.")
     def get(self):
         return redirect(f"{COGNITO_LINK}/login?client_id={CLIENT_ID}&response_type={RESPONSE_TYPE}&scope={SCOPE}&redirect_uri={CALLBACK_URI}")
 
 
 @api.route('/callback')
 class Callback(Resource):
+    @api.doc(description="Callback endpoint to receive and process the authorization code from Cognito after login.")
     def get(self):
         code = request.args.get('code')
         
@@ -149,6 +151,7 @@ class Callback(Resource):
 
 @api.route('/logout')
 class Logout(Resource):
+    @api.doc(description="Logs the user out of Cognito and clears the session.")
     def get(self):
         session.clear()
         response = make_response(redirect(f"{COGNITO_LINK}/logout?client_id={CLIENT_ID}&logout_uri={REDIRECT_URI}"))

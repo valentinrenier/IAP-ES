@@ -8,8 +8,17 @@ from services.db_services import delete_task, modify_task, add_task
 
 api=Namespace("api",path="/api",description="Api operations")
 
+task_model = api.model('Task', {
+    'title': fields.String(required=True, description='The title of the task'),
+    'description': fields.String(description='The description of the task'),
+    'deadline': fields.String(required=True, description='The deadline of the task in ISO 8601 format'),
+    'priority': fields.String(description='The priority level of the task')
+})
+
 @api.route('/add')
 class Add(Resource):
+    @api.doc(description="Add a new task to the database")
+    @api.expect(task_model, validate=True)
     def post(self):
         data = request.get_json()
         title = data.get('title')
@@ -26,6 +35,8 @@ class Add(Resource):
 
 @api.route('/delete/<int:task_id>')
 class Delete(Resource):
+    @api.doc(description="Delete a task by its ID")
+    @api.param('task_id', 'The unique identifier of the task to delete')
     def post(self, task_id):
         order_by = request.form.get('order_by', 'created_at_desc')  # 'created_at_desc' par défaut
         filters = request.form.getlist('filters')  # Récupère tous les filtres (s'ils existent)
@@ -53,6 +64,9 @@ class Delete(Resource):
 
 @api.route('/modify/<int:task_id>')
 class Modify(Resource):
+    @api.doc(description="Modify an existing task by its ID")
+    @api.param('task_id', 'The unique identifier of the task to modify')
+    @api.expect(task_model, validate=True)
     def post(self, task_id):
         data = request.json
         if modify_task(task_id, data) is True :

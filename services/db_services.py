@@ -86,8 +86,10 @@ def get_all_tasks(order_by, filters):
     show_priorities = [f.split('-')[0] for f in filters if 'priority' in f]
 
     with Session(engine) as session :
-        query = session.query(Task).filter(Task.user == flask_session['cognito:username'])
-        
+        try :
+            query = session.query(Task).filter(Task.user == flask_session['cognito:username'])
+        except Exception: 
+            return []
         #Filtering
         if show_completed and show_not_completed :
             pass
